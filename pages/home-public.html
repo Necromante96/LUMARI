@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Início — Público Geral — LUMARI</title>
+  <link rel="stylesheet" href="../css/styles.css">
+  <style>
+    .home-wrap{max-width:900px;margin:0 auto}
+    .mood-title{font-weight:800;color:#fff;margin:10px 0}
+    .mood-grid{display:grid;gap:14px;margin-top:16px}
+  .mood-option{display:flex;gap:10px;align-items:center;justify-content:center;padding:18px;border-radius:16px;border:1px solid rgba(124,77,255,0.25);background:linear-gradient(180deg, rgba(124,77,255,0.10), rgba(94,60,255,0.08));cursor:pointer;transition:transform .12s ease, box-shadow .18s, filter .2s; box-shadow: 0 8px 24px rgba(0,0,0,0.45)}
+  .mood-option .emoji{font-size:18px}
+  .mood-option:hover{filter:brightness(1.08); transform: translateY(-4px); box-shadow: 0 22px 60px rgba(94,60,255,0.28)}
+    .mood-option:active{transform:translateY(0) scale(.98)}
+    .mood-option.active{outline:3px solid rgba(124,77,255,0.35)}
+    @media(min-width:700px){.mood-grid{grid-template-columns:repeat(3,1fr)}}
+    .top-actions{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  </style>
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Barra de navegação">
+    <div class="topbar-inner">
+      <a href="../index.html" class="brand-mini" aria-label="LUMARI home">
+        <img src="../logo/logo.jpg" alt="LUMARI" class="logo-mini">
+      </a>
+      <nav class="nav" role="navigation" aria-label="Menu principal">
+        <a href="about.html">Quem somos?</a>
+        <a href="features.html">Funcionalidades</a>
+        <a href="credits.html">Créditos</a>
+        <span class="version-badge" aria-label="Versão atual">v0.0.8-alfa</span>
+      </nav>
+    </div>
+  </header>
+
+  <button id="audioToggle" class="audio-toggle" aria-pressed="false" aria-label="Ativar som">🔊</button>
+
+  <main class="container">
+    <section class="intro home-wrap">
+      <div class="top-actions">
+        <h1>Bem-vindo(a), <span id="userName">Usuário</span></h1>
+        <a href="../index.html" id="logoutBtn" class="changelog-btn" style="padding:8px 12px">Sair</a>
+      </div>
+  <p class="mood-title">Como você está se sentindo hoje?</p>
+      <div class="mood-grid">
+  <button class="mood-option" data-mood="alegre"><span class="emoji">😊</span> Alegre</button>
+  <button class="mood-option" data-mood="triste"><span class="emoji">😔</span> Triste</button>
+  <button class="mood-option" data-mood="outros"><span class="emoji">🤔</span> Outros</button>
+      </div>
+      <p id="moodMsg" class="muted" style="margin-top:12px"></p>
+    </section>
+  </main>
+
+  <script defer src="../js/main.js"></script>
+  <script>
+    (function(){
+      function getUser(){ try{ return JSON.parse(localStorage.getItem('lumari_user')||'null'); }catch(e){ return null; } }
+      const u = getUser();
+      if(!u || u.role !== 'public'){
+        location.href = 'login.html?role=public';
+        return;
+      }
+      document.getElementById('userName').textContent = u.name || u.email || 'Você';
+      document.querySelectorAll('.mood-option').forEach(btn=>{
+        btn.addEventListener('click', ()=>{
+          document.querySelectorAll('.mood-option').forEach(o=>o.classList.remove('active'));
+          btn.classList.add('active');
+          const mood = btn.dataset.mood;
+          const msg = {
+            alegre: 'Legal! Vamos recomendar conteúdos vibrantes e positivos.',
+            triste: 'Entendido. Vamos trazer conteúdos leves e acolhedores.',
+            outros: 'Perfeito. Te mostraremos uma mistura equilibrada.'
+          }[mood] || '';
+          const el = document.getElementById('moodMsg');
+          el.textContent = msg;
+        });
+      });
+      document.getElementById('logoutBtn').addEventListener('click', (e)=>{ try{ localStorage.removeItem('lumari_user'); }catch(e){} });
+    })();
+  </script>
+</body>
+</html>

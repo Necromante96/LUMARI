@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LUMARI — Neuromarketing Emocional</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="topbar" role="banner" aria-label="Barra de navegação">
+    <div class="topbar-inner">
+      <a href="index.html" class="brand-mini" aria-label="LUMARI home">
+        <img src="logo/logo.jpg" alt="LUMARI" class="logo-mini">
+      </a>
+      <nav class="nav" role="navigation" aria-label="Menu principal">
+  <a href="pages/about.html">Quem somos?</a>
+  <a href="pages/features.html">Funcionalidades</a>
+  <a href="pages/credits.html">Créditos</a>
+  <span class="version-badge" aria-label="Versão atual">v0.0.8-alfa</span>
+      </nav>
+    </div>
+  </header>
+  
+  <!-- Botão de controle de áudio (top-left). O elemento <audio> é criado dinamicamente por js/main.js para garantir um único player persistente -->
+  <button id="audioToggle" class="audio-toggle" aria-pressed="false" aria-label="Ativar som">🔊</button>
+  <main class="container">
+    <header class="brand">
+  <img src="logo/logo.jpg" alt="Logo LUMARI" class="logo">
+      <h1 class="site-name">LUMARI</h1>
+    </header>
+
+    <section class="intro">
+      <h2>Plataforma baseada em neuromarketing</h2>
+      <p>O LUMARI reconhece emoções através de voz e expressões faciais durante o consumo de conteúdo digital, recomendando conteúdos personalizados para uma experiência emocionalmente relevante.</p>
+      <p class="muted">Acesse como público geral para receber recomendações, ou como criador de conteúdo (assinatura) para métricas emocionais avançadas.</p>
+    </section>
+
+    <section class="access-grid" role="navigation" aria-label="Escolha de acesso">
+  <a href="pages/login.html?role=public" class="access-card btn" id="publicCard">
+        <div class="card-inner">
+          <h3>Entrar como Público Geral</h3>
+          <p>Acesse sua conta para receber recomendações personalizadas baseadas nas suas emoções.</p>
+        </div>
+      </a>
+
+  <a href="pages/login.html?role=creator" class="access-card creator btn" id="creatorCard">
+        <div class="card-inner">
+          <h3>Entrar como Criador de Conteúdo</h3>
+          <p>Assinantes acessam métricas emocionais dos seguidores e recomendações estratégicas.</p>
+        </div>
+      </a>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; <span id="year"></span> LUMARI — Plataforma de Neuromarketing Emocional</p>
+  <p class="authors">Autores: Júlia Silva, Lucas Tavares, Maluana Amaral, Muriel Rosa & Copilot GitHub</p>
+      <p>
+  <a class="changelog-btn" href="pages/updates.html">Atualizações <span class="pill" id="newsPill" hidden>Novidades</span></a>
+      </p>
+    </footer>
+  </main>
+
+  <script src="js/main.js" defer></script>
+</body>
+</html>
