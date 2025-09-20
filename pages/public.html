@@ -3,41 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LUMARI — Público Geral</title>
+  <title>Redirecionando — LUMARI</title>
   <link rel="stylesheet" href="../css/styles.css">
 </head>
 <body>
-  <header class="topbar" role="banner" aria-label="Barra de navegação">
-    <div class="topbar-inner">
-  <a href="../index.html" class="brand-mini" aria-label="LUMARI home">
-  <img src="../logo/logo.jpg" alt="LUMARI" class="logo-mini">
-      </a>
-      <nav class="nav" role="navigation" aria-label="Menu principal">
-  <a href="about.html">Quem somos?</a>
-  <a href="features.html">Funcionalidades</a>
-  <a href="credits.html">Créditos</a>
-      </nav>
-    </div>
-  </header>
-  <button id="audioToggle" class="audio-toggle" aria-pressed="false" aria-label="Ativar som">🔊</button>
-  <main class="container">
-    <header class="brand">
-  <img src="../logo/logo.jpg" alt="Logo LUMARI" class="logo">
-      <h1 class="site-name">LUMARI — Público Geral</h1>
-    </header>
-
-    <section class="intro">
-      <h2>Bem-vindo, Público Geral</h2>
-      <p>O LUMARI identifica emoções através da voz e expressões faciais enquanto você consome conteúdo digital. Com isso, recomendamos vídeos e conteúdos existentes (YouTube, TikTok etc.) que combinam com seu estado emocional atual, tornando sua experiência mais relevante e consciente.</p>
-      <p class="muted">Esta é uma página inicial do fluxo do público. Em próximas etapas implementaremos o fluxo de captura de emoções e recomendações.</p>
-    </section>
-
-  <a href="../index.html" class="access-card" style="max-width:320px;margin:24px auto;display:block;text-align:center;">Voltar</a>
-
-    <footer class="footer" style="margin-top:12px;">
-  <p class="muted">Autores: Júlia Silva, Lucas Tavares, Maluana Amaral, Muriel Rosa, Copilot GitHub</p>
-    </footer>
-  </main>
-  <script src="../js/main.js" defer></script>
+  <script>
+    // Redirecionar para login como público
+    if(window.lumariNavigate){ 
+      window.lumariNavigate('login.html?role=public'); 
+    } else { 
+      location.href = 'login.html?role=public'; 
+    }
+  </script>
 </body>
 </html>

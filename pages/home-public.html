@@ -38,7 +38,7 @@
   <main class="container">
     <section class="intro home-wrap">
       <div class="top-actions">
-        <h1>Bem-vindo(a), <span id="userName">Usuário</span></h1>
+        <h1>Bem-vindo(a), <span id="userName" style="display:none">Usuário</span></h1>
         <a href="../index.html" id="logoutBtn" class="changelog-btn" style="padding:8px 12px">Sair</a>
       </div>
   <p class="mood-title">Como você está se sentindo hoje?</p>
@@ -70,6 +70,7 @@
           return;
         }
         document.getElementById('userName').textContent = u.name || u.email || 'Você';
+        document.getElementById('userName').style.display = 'inline'; // mostrar após validação
         document.querySelectorAll('.mood-option').forEach(btn=>{
           btn.addEventListener('click', ()=>{
             document.querySelectorAll('.mood-option').forEach(o=>o.classList.remove('active'));

@@ -400,9 +400,7 @@ main.container{ will-change: opacity, transform; }
 .deny-card h2{margin:0 0 10px;color:var(--accent-2)}
 .deny-card p{color:var(--muted);margin-bottom:14px}
 
-/* Small theme toggle button in topbar */
-.theme-toggle{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
-.theme-toggle:focus{outline:3px solid rgba(124,77,255,0.14);outline-offset:3px}
+
 
 /* micro-interaction: subtle lift for elements with .micro-lift */
 .micro-lift{transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;}
