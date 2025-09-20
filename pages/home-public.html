@@ -26,9 +26,9 @@
       </a>
       <nav class="nav" role="navigation" aria-label="Menu principal">
         <a href="about.html">Quem somos?</a>
-        <a href="features.html">Funcionalidades</a>
-        <a href="credits.html">Créditos</a>
-        <span class="version-badge" aria-label="Versão atual">v0.0.8-alfa</span>
+  <a href="features.html">Funcionalidades</a>
+  <a href="credits.html">Créditos</a>
+  <span class="version-badge" aria-label="Versão atual">v0.0.9-alfa</span>
       </nav>
     </div>
   </header>
@@ -54,6 +54,8 @@
   <script defer src="../js/main.js"></script>
   <script>
     (function(){
+      // garantir que o termo foi aceito antes de permitir uso
+      try{ if(typeof ensureTermsAcceptedOrShow === 'function'){ const ok = ensureTermsAcceptedOrShow(); if(!ok) return; } }catch(e){}
       function getUser(){ try{ return JSON.parse(localStorage.getItem('lumari_user')||'null'); }catch(e){ return null; } }
       const u = getUser();
       if(!u || u.role !== 'public'){

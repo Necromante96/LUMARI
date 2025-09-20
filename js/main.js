@@ -10,9 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const UNMUTED_KEY = 'lumari_unmuted';
   const SYNC_KEY = 'lumari_audio_sync';
   // Versão atual do site
-  const CURRENT_VER = '0.0.8';
+  const CURRENT_VER = '0.0.9';
 
   const toggle = document.getElementById('audioToggle');
+  const THEME_KEY = 'lumari_theme';
+  const TERMS_KEY = 'lumari_terms_accepted';
 
   function throttle(fn, wait){ let last=0; let t; return (...args)=>{ const now = Date.now(); if(now-last>wait){ last=now; fn(...args); } else { clearTimeout(t); t=setTimeout(()=>{ last=Date.now(); fn(...args); }, wait-(now-last)); } }; }
 
@@ -382,7 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Novidades: mostrar selo se versão atual for maior que a última vista
     try{
-  const CURRENT_VER = '0.0.8';
+  const CURRENT_VER = '0.0.9';
       const seen = localStorage.getItem('lumari_last_seen_version') || '0.0.0';
       const newer = compareSemver(CURRENT_VER, seen) > 0;
       const pill = document.getElementById('newsPill');
@@ -400,7 +402,120 @@ document.addEventListener('DOMContentLoaded', () => {
         if(pill) pill.hidden = true;
       }
     }catch(_){}
+    // aplicar micro-interactions e tema após inicialização de conteúdo
+    try{ enrichMicroInteractions(document); initTheme(); }catch(e){}
   }
+
+  /* Theme management */
+  function applyTheme(theme){
+    try{
+      document.body.classList.remove('theme-light');
+      if(theme === 'light') document.body.classList.add('theme-light');
+      localStorage.setItem(THEME_KEY, theme);
+    }catch(e){}
+  }
+  function initTheme(){
+    try{
+      const saved = localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+      applyTheme(saved);
+      // add small toggle to topbar
+      const tb = document.querySelector('.topbar-inner');
+      if(tb && !document.getElementById('themeToggleBtn')){
+        const btn = document.createElement('button');
+        btn.id = 'themeToggleBtn'; btn.className='theme-toggle micro-lift';
+        btn.type = 'button'; btn.title = 'Alternar tema';
+        btn.textContent = saved === 'light' ? '🌞 Claro' : '🌙 Escuro';
+        btn.addEventListener('click', ()=>{ const next = document.body.classList.contains('theme-light') ? 'dark' : 'light'; applyTheme(next); btn.textContent = next === 'light' ? '🌞 Claro' : '🌙 Escuro'; });
+        tb.appendChild(btn);
+      }
+    }catch(e){}
+  }
+
+  // exportar para uso externo/páginas
+  try{ window.initTheme = initTheme; window.ensureTermsAcceptedOrShow = ensureTermsAcceptedOrShow; }catch(e){}
+
+  /* Terms modal creation and control */
+  function createTermsModal(){
+    if(document.getElementById('termsModal')) return;
+    const modal = document.createElement('div');
+    modal.id = 'termsModal'; modal.className = 'modal-backdrop';
+    const card = document.createElement('div'); card.className='modal-card';
+    card.innerHTML = `
+      <div class="modal-header">
+        <div class="modal-title">Termo de Uso – Acesso à Plataforma LÚMARI</div>
+      </div>
+      <div class="modal-body">
+        <p>Bem-vindo(a) à LÚMARI! Nossa plataforma foi desenvolvida com base em pesquisa acadêmica e inovação tecnológica, unindo neuromarketing, inteligência artificial e ciência do comportamento para proporcionar uma experiência digital mais humana, personalizada e consciente.</p>
+        <p>Antes de acessar o conteúdo, é importante que você leia e concorde com as condições abaixo:</p>
+        <h4>1. Uso da Plataforma</h4>
+        <p>O acesso é destinado a fins pessoais, acadêmicos ou profissionais, respeitando sempre os princípios de ética, segurança e responsabilidade digital. É proibido utilizar os recursos da plataforma para práticas ilegais, discriminatórias ou que comprometam a integridade de outros usuários.</p>
+        <h4>2. Privacidade e Dados</h4>
+        <p>Coletamos apenas informações necessárias para oferecer recomendações e relatórios personalizados. Seus dados serão tratados com confidencialidade, segurança e em conformidade com legislações de proteção de dados.</p>
+        <h4>3. Conteúdo e Relatórios</h4>
+        <p>As análises geradas pela plataforma são baseadas em métricas digitais e emocionais, servindo como apoio estratégico. A LÚMARI não se responsabiliza por interpretações incorretas ou usos indevidos dos relatórios.</p>
+        <h4>4. Captação de Emoções (Uso de Câmera e Áudio)</h4>
+        <p>Ao utilizar a plataforma, você pode optar por permitir a captação da câmera do dispositivo para análise de expressões faciais e do áudio/microfone para avaliação de tom de voz. Essas funcionalidades são utilizadas exclusivamente para aprimorar a análise emocional e personalizar sua experiência dentro da plataforma. O uso desses recursos é opcional e só será ativado mediante sua autorização explícita. Nenhum dado bruto de vídeo ou áudio será armazenado; apenas indicadores emocionais processados pela inteligência artificial serão utilizados.</p>
+        <h4>5. Colaboração e Transparência</h4>
+        <p>Reconhecemos o apoio de ferramentas como ChatGPT e Copilot, utilizadas em algumas etapas de desenvolvimento como suporte, mas reafirmamos que todo o conteúdo aqui disponível foi criado e validado pela equipe da LÚMARI.</p>
+        <h4>6. Aceite</h4>
+        <p>Ao continuar, você declara que compreendeu e aceita estes termos, incluindo o uso opcional de recursos de câmera e áudio para análises emocionais, comprometendo-se a utilizar a plataforma de forma consciente, ética e colaborativa.</p>
+        <p style="margin-top:8px;color:var(--muted)">🔹 Se você concorda com os termos acima, clique em “Aceitar e Continuar” para acessar a LÚMARI.</p>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-decline" id="termsDecline">Não Aceito</button>
+        <button class="btn btn-accept" id="termsAccept">Aceitar e Continuar</button>
+      </div>
+    `.trim();
+    modal.appendChild(card);
+    document.body.appendChild(modal);
+    // adicionar classe para animação após append
+    requestAnimationFrame(()=>{ modal.classList.add('show'); });
+
+    // callback support: dispatch custom events on accept/decline
+    document.getElementById('termsAccept').addEventListener('click', ()=>{ try{ localStorage.setItem(TERMS_KEY, 'true'); modal.classList.remove('show'); setTimeout(()=>modal.remove(), 320); document.dispatchEvent(new CustomEvent('lumari:termsAccepted')); }catch(e){} });
+    document.getElementById('termsDecline').addEventListener('click', ()=>{ modal.classList.remove('show'); setTimeout(()=>{ modal.remove(); showDenyScreen(); }, 320); document.dispatchEvent(new CustomEvent('lumari:termsDeclined')); });
+  }
+
+  function showDenyScreen(){
+    if(document.getElementById('denyScreen')) return;
+    const s = document.createElement('div'); s.id='denyScreen'; s.className='deny-screen';
+    s.innerHTML = `<div class="deny-card"><h2>Acesso Negado</h2><p>Você optou por não aceitar os Termos de Uso da LÚMARI. Sem essa autorização, infelizmente não será possível acessar a plataforma, já que o uso dos recursos e diretrizes descritas é essencial para o funcionamento do sistema e para garantir uma experiência segura e personalizada.</p><div style="display:flex;gap:10px;justify-content:center"><button class="btn btn-accept" id="backToTerms">Voltar aos Termos</button><button class="btn btn-decline" id="closeDeny">Encerrar</button></div></div>`;
+    document.body.appendChild(s);
+    document.getElementById('backToTerms').addEventListener('click', ()=>{ s.remove(); createTermsModal(); });
+    document.getElementById('closeDeny').addEventListener('click', ()=>{
+      try{ const closed = window.close(); // many browsers block this
+        // if not closed, show fallback message
+        setTimeout(()=>{
+          if(!document.hidden){
+            // mostrar aviso temporário
+            const fb = document.createElement('div'); fb.className='close-fallback'; fb.textContent = 'Não foi possível fechar automaticamente. Você pode fechar esta aba manualmente.'; document.body.appendChild(fb);
+            setTimeout(()=>{ try{ fb.remove(); }catch(e){} }, 5000);
+          }
+        }, 200);
+      }catch(e){ // fallback: informar e remover
+        const fb = document.createElement('div'); fb.className='close-fallback'; fb.textContent = 'Encerramento automático bloqueado. Feche a aba manualmente.'; document.body.appendChild(fb);
+        setTimeout(()=>{ try{ fb.remove(); }catch(e){} }, 5000);
+        s.remove();
+      }
+    });
+  }
+
+  function ensureTermsAcceptedOrShow(){
+    try{
+      const accepted = localStorage.getItem(TERMS_KEY) === 'true';
+      if(!accepted){ createTermsModal(); return false; }
+      return true;
+    }catch(e){ createTermsModal(); return false; }
+  }
+
+  // Apply micro-lift class to common interactive elements for richer interactions
+  function enrichMicroInteractions(root=document){
+    try{
+      const selectors = ['.access-card', '.changelog-btn', '.btn', '.mood-option', '.metric-card', '.nav a', '.auth-card'];
+      selectors.forEach(sel=>{ Array.from((root.querySelectorAll(sel) || [])).forEach(el=>{ el.classList.add('micro-lift'); }); });
+    }catch(e){}
+  }
+
 
   // Semver simples: retorna 1 se a>b, -1 se a<b, 0 igual
   function compareSemver(a,b){

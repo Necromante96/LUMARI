@@ -29,9 +29,9 @@
       </a>
       <nav class="nav" role="navigation" aria-label="Menu principal">
         <a href="about.html">Quem somos?</a>
-        <a href="features.html">Funcionalidades</a>
-        <a href="credits.html">Créditos</a>
-        <span class="version-badge" aria-label="Versão atual">v0.0.8-alfa</span>
+  <a href="features.html">Funcionalidades</a>
+  <a href="credits.html">Créditos</a>
+  <span class="version-badge" aria-label="Versão atual">v0.0.9-alfa</span>
       </nav>
     </div>
   </header>
@@ -93,10 +93,30 @@
             localStorage.setItem('lumari_emails', JSON.stringify(list));
           }catch(e){}
           const target = role === 'creator' ? 'home-creator.html' : 'home-public.html';
-          if(window.lumariNavigate){ window.lumariNavigate(target); } else { location.href = target; }
+          // Após cadastro, abrir a página alvo, mas garantir que os termos sejam apresentados
+          // Mostrar modal de termos imediatamente e só redirecionar se aceito
+          try{
+            // criar modal caso não exista
+            if(typeof createTermsModal === 'function') createTermsModal();
+            // escutar aceite
+            const onAccept = ()=>{
+              document.removeEventListener('lumari:termsAccepted', onAccept);
+              document.removeEventListener('lumari:termsDeclined', onDecline);
+              if(window.lumariNavigate){ window.lumariNavigate(target); } else { location.href = target; }
+            };
+            const onDecline = ()=>{
+              document.removeEventListener('lumari:termsAccepted', onAccept);
+              document.removeEventListener('lumari:termsDeclined', onDecline);
+              // não redireciona; a tela de negação será exibida pelo main.js
+            };
+            document.addEventListener('lumari:termsAccepted', onAccept);
+            document.addEventListener('lumari:termsDeclined', onDecline);
+          }catch(e){ if(window.lumariNavigate){ window.lumariNavigate(target); } else { location.href = target; } }
         })();
       });
     })();
+    // Inicializar tema e, ao carregar a próxima página via PJAX, o script em main.js cuidará de mostrar os termos se necessário.
+    try{ if(window.initTheme) window.initTheme(); }catch(e){}
   // Exportador simples de e-mails (opcional): pressione Ctrl+E nesta página
     document.addEventListener('keydown', function(e){
       if(e.ctrlKey && (e.key==='e' || e.key==='E')){

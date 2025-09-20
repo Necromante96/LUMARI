@@ -369,3 +369,50 @@ main.container{ will-change: opacity, transform; }
   display:inline-block;
   text-decoration:none;
 }
+
+/* Theme: light mode variables applied when .theme-light is on body */
+.theme-light{
+  --bg: #f6f7fb;
+  --card: #ffffff;
+  --accent: #5e3cff;
+  --accent-2: #7c4dff;
+  --glass: rgba(12,10,20,0.02);
+  --text: #0b0b10;
+  --muted: #4b4b5a;
+}
+
+/* Modal (terms) */
+.modal-backdrop{
+  position:fixed;inset:0;background:rgba(2,2,6,0.6);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;z-index:1200;padding:24px
+}
+.modal-card{max-width:880px;width:100%;background:linear-gradient(180deg,var(--card),var(--card));border-radius:14px;padding:20px;color:var(--text);box-shadow:0 20px 60px rgba(6,3,12,0.6);border:1px solid rgba(0,0,0,0.06);transform-origin:center center}
+.modal-header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.modal-title{font-size:18px;font-weight:800;color:var(--accent-2)}
+.modal-body{max-height:60vh;overflow:auto;padding-top:12px;color:var(--muted);line-height:1.45}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px}
+.modal-actions .btn{padding:10px 14px;border-radius:10px}
+.btn-accept{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#fff;border:0}
+.btn-decline{background:transparent;border:1px solid rgba(0,0,0,0.06);color:var(--muted)}
+
+/* Deny screen */
+.deny-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,rgba(10,7,12,0.95),rgba(6,4,10,0.96));z-index:1300;padding:24px}
+.deny-card{max-width:720px;padding:20px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.04);color:var(--text);text-align:center}
+.deny-card h2{margin:0 0 10px;color:var(--accent-2)}
+.deny-card p{color:var(--muted);margin-bottom:14px}
+
+/* Small theme toggle button in topbar */
+.theme-toggle{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border:1px solid rgba(255,255,255,0.04);cursor:pointer;color:var(--muted)}
+.theme-toggle:focus{outline:3px solid rgba(124,77,255,0.14);outline-offset:3px}
+
+/* micro-interaction: subtle lift for elements with .micro-lift */
+.micro-lift{transition:transform .18s cubic-bezier(.2,.9,.2,1), box-shadow .18s;}
+.micro-lift:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(94,60,255,0.12)}
+
+/* Modal animations: fade + scale */
+.modal-backdrop{opacity:0;transition:opacity .28s cubic-bezier(.2,.9,.2,1)}
+.modal-backdrop.show{opacity:1}
+.modal-card{transform:scale(.98) translateY(6px);opacity:0;transition:transform .28s cubic-bezier(.2,.9,.2,1), opacity .28s}
+.modal-backdrop.show .modal-card{transform:scale(1) translateY(0);opacity:1}
+
+/* close fallback notice */
+.close-fallback{position:fixed;left:50%;top:16px;transform:translateX(-50%);background:linear-gradient(180deg,rgba(0,0,0,0.7),rgba(0,0,0,0.5));color:#fff;padding:8px 12px;border-radius:8px;z-index:1400;box-shadow:0 8px 30px rgba(0,0,0,0.6)}

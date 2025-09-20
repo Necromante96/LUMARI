@@ -42,8 +42,18 @@ Próximos passos sugeridos:
 - Criar painel do criador com visualização de métricas e recomendações.
 - Implementar autenticação e tela de assinatura.
 
+Testes rápidos do novo fluxo (Termos e Tema)
+-----------------------------------------
+
+- Abra o site localmente (ex.: `python -m http.server 8000`) e acesse `http://localhost:8000`.
+- Clique em "Entrar" → "Criar Conta" e complete o formulário.
+- Após clicar em "Criar Conta", o modal de Termos será mostrado imediatamente na página de cadastro.
+- Ao clicar em "Aceitar e Continuar" você será redirecionado para a home correspondente. O aceite é persistido em `localStorage.lumari_terms_accepted = 'true'`.
+- Se você clicar em "Não Aceito", aparecerá a tela de "Acesso Negado" com opções para voltar aos termos ou encerrar. Se o encerramento automático falhar, será mostrado um aviso temporário instruindo a fechar a aba manualmente.
+- Use o botão de tema no topo para alternar entre claro/escuro; a preferência é salva em `localStorage.lumari_theme`.
+
 Versão atual
 -----------
 
-- v0.0.7-alfa (2025-09-19): melhorias de robustez — resolução de paths para deploys em subdiretórios, logs de diagnóstico, normalização de links (evita /pages/pages/...), execução de scripts via PJAX e página 404 adicionada.
+	- v0.0.9-alfa (2025-09-20): release — melhorias de UX/UI, termos de uso obrigatórios no cadastro, temas personalizáveis, micro-interações e correções diversas.
 # LUMARI
