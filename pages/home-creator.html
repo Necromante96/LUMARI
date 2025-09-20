@@ -54,27 +54,35 @@
   <script>
     (function(){
       // garantir que o termo foi aceito antes de permitir uso
-      try{ if(typeof ensureTermsAcceptedOrShow === 'function'){ const ok = ensureTermsAcceptedOrShow(); if(!ok) return; } }catch(e){}
-      function getUser(){ try{ return JSON.parse(localStorage.getItem('lumari_user')||'null'); }catch(e){ return null; } }
-      const u = getUser();
-      if(!u || u.role !== 'creator'){
-        location.href = 'login.html?role=creator';
-        return;
-      }
-      document.getElementById('userName').textContent = u.name || u.email || 'Você';
-      // mock de atualização de métricas
-      function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min }
-      function set(elPct, elVal){ return (v)=>{ elPct.style.width=v+'%'; elVal.textContent=v+'%'; } }
-      const updaters = [
-        set(document.getElementById('m1'), document.getElementById('m1v')),
-        set(document.getElementById('m2'), document.getElementById('m2v')),
-        set(document.getElementById('m3'), document.getElementById('m3v')),
-        set(document.getElementById('m4'), document.getElementById('m4v')),
-      ];
-      function tick(){ updaters.forEach(u=>u(rnd(10,95))); }
-      tick();
-      setInterval(tick, 2500);
-      document.getElementById('logoutBtn').addEventListener('click', (e)=>{ try{ localStorage.removeItem('lumari_user'); }catch(e){} });
+      setTimeout(()=>{
+        try{ 
+          if(typeof window.ensureTermsAcceptedOrShow === 'function'){ 
+            const ok = window.ensureTermsAcceptedOrShow(); 
+            if(!ok) return; 
+          } 
+        }catch(e){}
+        
+        function getUser(){ try{ return JSON.parse(localStorage.getItem('lumari_user')||'null'); }catch(e){ return null; } }
+        const u = getUser();
+        if(!u || u.role !== 'creator'){
+          location.href = 'login.html?role=creator';
+          return;
+        }
+        document.getElementById('userName').textContent = u.name || u.email || 'Você';
+        // mock de atualização de métricas
+        function rnd(min,max){ return Math.floor(Math.random()*(max-min+1))+min }
+        function set(elPct, elVal){ return (v)=>{ elPct.style.width=v+'%'; elVal.textContent=v+'%'; } }
+        const updaters = [
+          set(document.getElementById('m1'), document.getElementById('m1v')),
+          set(document.getElementById('m2'), document.getElementById('m2v')),
+          set(document.getElementById('m3'), document.getElementById('m3v')),
+          set(document.getElementById('m4'), document.getElementById('m4v')),
+        ];
+        function tick(){ updaters.forEach(u=>u(rnd(10,95))); }
+        tick();
+        setInterval(tick, 2500);
+        document.getElementById('logoutBtn').addEventListener('click', (e)=>{ try{ localStorage.removeItem('lumari_user'); }catch(e){} });
+      }, 100);
     })();
   </script>
 </body>

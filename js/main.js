@@ -418,21 +418,12 @@ document.addEventListener('DOMContentLoaded', () => {
     try{
       const saved = localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
       applyTheme(saved);
-      // add small toggle to topbar
-      const tb = document.querySelector('.topbar-inner');
-      if(tb && !document.getElementById('themeToggleBtn')){
-        const btn = document.createElement('button');
-        btn.id = 'themeToggleBtn'; btn.className='theme-toggle micro-lift';
-        btn.type = 'button'; btn.title = 'Alternar tema';
-        btn.textContent = saved === 'light' ? '🌞 Claro' : '🌙 Escuro';
-        btn.addEventListener('click', ()=>{ const next = document.body.classList.contains('theme-light') ? 'dark' : 'light'; applyTheme(next); btn.textContent = next === 'light' ? '🌞 Claro' : '🌙 Escuro'; });
-        tb.appendChild(btn);
-      }
+      // removido botão de toggle do tema conforme solicitado
     }catch(e){}
   }
 
   // exportar para uso externo/páginas
-  try{ window.initTheme = initTheme; window.ensureTermsAcceptedOrShow = ensureTermsAcceptedOrShow; }catch(e){}
+  try{ window.initTheme = initTheme; window.ensureTermsAcceptedOrShow = ensureTermsAcceptedOrShow; window.createTermsModal = createTermsModal; }catch(e){}
 
   /* Terms modal creation and control */
   function createTermsModal(){

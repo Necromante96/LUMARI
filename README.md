@@ -52,6 +52,35 @@ Testes rápidos do novo fluxo (Termos e Tema)
 - Se você clicar em "Não Aceito", aparecerá a tela de "Acesso Negado" com opções para voltar aos termos ou encerrar. Se o encerramento automático falhar, será mostrado um aviso temporário instruindo a fechar a aba manualmente.
 - Use o botão de tema no topo para alternar entre claro/escuro; a preferência é salva em `localStorage.lumari_theme`.
 
+Sistema de Backup Local
+----------------------
+
+Para criar backups locais do projeto (em `C:\Users\lukas\Downloads\LUMARI`):
+
+**Usando o script automatizado (Windows):**
+```batch
+# Executar o arquivo batch
+backup.bat
+
+# Ou diretamente via linha de comando
+backup.bat backup    # Criar backup
+backup.bat restore   # Restaurar backup
+```
+
+**Usando Node.js diretamente:**
+```bash
+# Criar backup
+node backup.js backup
+
+# Restaurar backup
+node backup.js restore
+
+# Ver ajuda
+node backup.js
+```
+
+O sistema de backup copia todos os arquivos essenciais do projeto e cria um arquivo de informações com timestamp para controle de versões.
+
 Versão atual
 -----------
 
