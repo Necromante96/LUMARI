@@ -6,6 +6,10 @@
 // - Acordeão com chevron rotativo e transição de altura
 
 document.addEventListener('DOMContentLoaded', () => {
+  // Evitar múltiplas inicializações do sistema de áudio
+  if(window.lumariAudioInitialized) return;
+  window.lumariAudioInitialized = true;
+  
   const POS_KEY = 'lumari_audio_pos';
   const UNMUTED_KEY = 'lumari_unmuted';
   const SYNC_KEY = 'lumari_audio_sync';
@@ -43,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // modo debug: ativa logs detalhados quando localStorage.lumari_debug == '1'
   const LUMARI_DEBUG = (function(){ try{ return localStorage.getItem('lumari_debug') === '1'; }catch(e){ return false; } })();
 
-  // normalizeHref disponível globalmente no arquivo para PJAX e debug
+  // normalizeHref disponível globalmente no arquivo para PJAX
   function normalizeHref(h){
     if(!h) return h;
     if(h.startsWith('mailto:') || h.startsWith('tel:') || h.startsWith('javascript:')) return h;
@@ -57,9 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     try{ const rr = new URL(h, location.href); rr.pathname = rr.pathname.replace(/\/pages\/+((pages\/)+)/g, '/pages/'); return rr.toString(); }catch(e){ return h; }
   }
-
-  // Debug: mostrar exemplos de normalização quando ativado
-  try{ if(LUMARI_DEBUG){ const examples = ['index.html','pages/about.html','/pages/credits.html','/index.html','./about.html','../pages/updates.html']; console.group('[LUMARI DEBUG] normalizeHref examples'); examples.forEach(ex=>{ try{ console.log(ex, '→', normalizeHref(ex)); }catch(e){} }); console.groupEnd(); } }catch(e){}
 
   // Garantir único elemento <audio> com único source robusto
   // Usar caminho absoluto relativo à raiz para evitar múltiplos 404s: '/sound/sound.mp3'
@@ -148,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(UNMUTED_KEY,'false');
         updateToggleUI(); broadcastMute(true);
         return true;
-      }catch(err){ console.log('Autoplay bloqueado', err); return false; }
+      }catch(err){ return false; }
     }
   }
 
@@ -195,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if(currentlyMuted){
         // estava mutado -> desmutar e tentar tocar com fade
         try{ audioRef.muted = false; await audioRef.play(); await fadeIn(audioRef, 360); localStorage.setItem(UNMUTED_KEY, 'true'); broadcastMute(false); }
-        catch(e){ console.warn('Falha ao desmutar/play', e); }
+        catch(e){}
       } else {
         // estava tocando -> mutar
         audioRef.muted = true; localStorage.setItem(UNMUTED_KEY, 'false'); broadcastMute(true);
@@ -418,7 +419,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try{
       const saved = localStorage.getItem(THEME_KEY) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
       applyTheme(saved);
-      // removido botão de toggle do tema conforme solicitado
+      // auto-detectar preferência do sistema
     }catch(e){}
   }
 

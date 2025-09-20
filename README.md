@@ -50,7 +50,6 @@ Testes rápidos do novo fluxo (Termos e Tema)
 - Após clicar em "Criar Conta", o modal de Termos será mostrado imediatamente na página de cadastro.
 - Ao clicar em "Aceitar e Continuar" você será redirecionado para a home correspondente. O aceite é persistido em `localStorage.lumari_terms_accepted = 'true'`.
 - Se você clicar em "Não Aceito", aparecerá a tela de "Acesso Negado" com opções para voltar aos termos ou encerrar. Se o encerramento automático falhar, será mostrado um aviso temporário instruindo a fechar a aba manualmente.
-- Use o botão de tema no topo para alternar entre claro/escuro; a preferência é salva em `localStorage.lumari_theme`.
 
 Sistema de Backup Local
 ----------------------
