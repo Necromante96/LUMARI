@@ -1,3 +1,7 @@
+# LINK PARA ACESSAR DIRETAMENTE O SITE
+
+https://necromante96.github.io/LUMARI/
+
 # LUMARI
 
 Uma demo/protótipo estático (HTML/CSS/JS) que explora ideias de UX para plataformas com foco em conteúdo emocional e criação: reprodução de áudio persistente, navegação parcial tipo PJAX para preservar estado, microinterações sonoras e uma página de criador com tendências agregadas por rede social.
