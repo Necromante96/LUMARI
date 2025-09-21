@@ -45,6 +45,18 @@ Autenticação (mock/local):
 - `window.pjaxLoad(url)` exposto globalmente para navegações programáticas (usado no Login/Signup para manter a música sem reiniciar).
 - Preferência por paths relativos simples, compatíveis com deploy em subdiretórios (ex.: GitHub Pages).
 
+## Atualizando o changelog automaticamente
+
+Para facilitar manter o `README.md` atualizado, incluí um pequeno script que insere uma entrada no topo do changelog.
+
+Uso rápido:
+
+```sh
+./scripts/update_readme_changelog.sh v0.1.7-alfa "Pequenas correções e melhorias"
+```
+
+O script adiciona a versão e as notas no início da seção "Histórico de versões". Ele faz commit automático do `README.md` para facilitar o fluxo; revise o commit antes de pushar se desejar.
+
 
 ## Histórico de versões (changelog)
 
