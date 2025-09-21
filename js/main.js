@@ -400,4 +400,72 @@ document.addEventListener('DOMContentLoaded', () => {
     window.pjaxLoad = pjaxLoad;
     window.lumariPlayClick = playClickSound;
   }catch(e){}
+
+  // ===== Efeito de boas-vindas (tremor + confetes + menção honrosa) =====
+  (function welcomeHonors(){
+    try{
+      // Evita repetir na mesma sessão
+      if(sessionStorage.getItem('lumari_honors_shown') === '1') return;
+      sessionStorage.setItem('lumari_honors_shown','1');
+
+      // Tremor breve no body
+      document.body.classList.add('shake-once');
+      setTimeout(()=>{ document.body.classList.remove('shake-once'); }, 700);
+
+      // Confetes simples
+      const container = document.createElement('div');
+      container.className = 'confetti-container';
+      const colors = ['#7c4dff','#5e3cff','#ff6b6b','#ffd166','#06d6a0','#4dabf7'];
+      const COUNT = 50;
+      for(let i=0;i<COUNT;i++){
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random()*100 + 'vw';
+        c.style.background = colors[Math.floor(Math.random()*colors.length)];
+        c.style.animationDuration = (1.8 + Math.random()*1.6) + 's, ' + (1 + Math.random()*1.2) + 's';
+        c.style.animationDelay = (Math.random()*0.6) + 's, 0s';
+        c.style.transform = 'translateY(-20px) rotate(' + (Math.random()*360) + 'deg)';
+        container.appendChild(c);
+      }
+      document.body.appendChild(container);
+      // limpeza automática após alguns segundos
+      setTimeout(()=>{ try{ container.remove(); }catch(e){} }, 3500);
+
+      // Modal de Menção Honrosa
+      if(document.getElementById('honorsModal')) return;
+      const modal = document.createElement('div');
+      modal.id = 'honorsModal';
+      modal.className = 'modal-backdrop honors';
+      const card = document.createElement('div');
+      card.className = 'modal-card';
+      card.innerHTML = `
+        <div class="modal-header">
+          <div class="modal-title">Menção Honrosa</div>
+        </div>
+        <div class="modal-body">
+          <p>Este projeto acadêmico, desenvolvido no âmbito do curso de Marketing do Senac Viamão – RS, representa o esforço coletivo, a criatividade e a dedicação de um grupo comprometido em transformar ideias em soluções inovadoras.</p>
+          <p>Um agradecimento especial aos alunos que deram vida a este trabalho:</p>
+          <ul>
+            <li>Júlia Silva</li>
+            <li>Lucas Tavares</li>
+            <li>Maluana Amaral</li>
+            <li>Muriel Rosa</li>
+          </ul>
+          <p>Cada um contribuiu com talento, pesquisa e empenho para que este projeto fosse concluído com excelência, unindo teoria e prática em um resultado inspirador.</p>
+        </div>
+        <div class="modal-actions" style="justify-content:center">
+          <button class="btn btn-accept" id="honorsOk">Obrigado a todos, clique para começar!</button>
+        </div>
+      `;
+      modal.appendChild(card);
+      document.body.appendChild(modal);
+      requestAnimationFrame(()=>{ modal.classList.add('show'); });
+
+      const ok = modal.querySelector('#honorsOk');
+      if(ok){ ok.addEventListener('click', ()=>{
+        try{ modal.classList.remove('show'); }catch(e){}
+        setTimeout(()=>{ try{ modal.remove(); }catch(e){} }, 280);
+      }); }
+    }catch(e){}
+  })();
 });
