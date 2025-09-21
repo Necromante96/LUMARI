@@ -47,20 +47,25 @@ Autenticação (mock/local):
 
 ## Atualizando o changelog automaticamente
 
-Para facilitar manter o `README.md` atualizado, incluí um pequeno script que insere uma entrada no topo do changelog.
+Para facilitar manter o `README.md` atualizado, há um pequeno script que insere uma entrada no topo do changelog.
 
-Uso rápido:
+Uso rápido (insere a entrada, sem commit automático):
 
 ```sh
 ./scripts/update_readme_changelog.sh v0.1.7-alfa "Pequenas correções e melhorias"
 ```
 
-O script adiciona a versão e as notas no início da seção "Histórico de versões". Ele faz commit automático do `README.md` para facilitar o fluxo; revise o commit antes de pushar se desejar.
+Observação: o script agora apenas modifica o `README.md`; se quiser commitar e enviar, faça isso manualmente para controlar o fluxo de commits/push.
 
 
-## Histórico de versões (changelog)
+## Histórico de versões
 
-v0.1.6-alfa (atual)
+v0.1.7-alfa (atual)
+- Revertido comportamento de push automático pós-commit (hooks locais removidos).
+- Reorganização e limpeza do README; instruções de workflow atualizadas.
+- Reversão do commit/push automático no helper de changelog; agora o script apenas insere a entrada.
+
+v0.1.6-alfa
 - Correções nos acordeões (detalhes/summary) para exibir corretamente o conteúdo com transições suaves.
 - Reaplicação segura de enhanceAccordions() após navegações PJAX.
 - Pequenas otimizações de performance no carregamento PJAX.
