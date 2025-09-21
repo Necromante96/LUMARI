@@ -39,10 +39,12 @@
     .small-btn{padding:6px 8px;border-radius:10px;border:1px solid rgba(255,255,255,0.14);background:rgba(255,255,255,0.06);color:#fff;cursor:pointer}
     .trends-panel{margin-top:16px;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.08);background:linear-gradient(180deg,rgba(255,255,255,0.04),transparent)}
     .trends-list{display:grid;gap:8px;margin-top:8px}
-    .trend-item{display:flex;justify-content:space-between;align-items:center;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
-    .rank{font-weight:800;color:#fff}
-    .term{color:#eee}
-    .volume{font-size:12px;color:#bbb}
+    .trend-item{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06)}
+    .term{color:#eee;font-weight:700}
+    .trend-right{display:flex;align-items:center;gap:8px}
+    .trend-logos{display:flex;align-items:center;gap:6px}
+    .trend-logos img{width:18px;height:18px;border-radius:4px;object-fit:cover;box-shadow:0 1px 4px rgba(0,0,0,0.4)}
+    .volume{font-size:12px;color:#bbb;white-space:nowrap}
   </style>
 </head>
 <body>
@@ -268,15 +270,24 @@
 
         // ===== Tendências (agregado) =====
         function aggregateTrends(){
-          const all = [];
-          NETWORKS.forEach(n=>{ all.push(...pickTrendsFor(n.id)); });
-          const counts = {};
-          all.forEach(t=>{ counts[t] = (counts[t]||0) + 1 + Math.floor(Math.random()*3); });
-          const sorted = Object.entries(counts).sort((a,b)=> b[1]-a[1]).slice(0,6);
-          // converte contagem em "pessoas" estimadas
-          return sorted.map(([term,score],i)=>{
-            const people = score * (800 + Math.floor(Math.random()*4200));
-            return {rank:i+1, term, people};
+          // Mapa de termo -> { score, networks: Set(ids) }
+          const map = new Map();
+          NETWORKS.forEach(n=>{
+            const terms = pickTrendsFor(n.id);
+            terms.forEach(t=>{
+              const cur = map.get(t) || { score:0, networks:new Set() };
+              cur.score += 1 + Math.floor(Math.random()*3);
+              cur.networks.add(n.id);
+              map.set(t, cur);
+            });
+          });
+          const arr = Array.from(map.entries()).map(([term,info])=>({ term, score:info.score, networks:Array.from(info.networks) }));
+          arr.sort((a,b)=> b.score - a.score);
+          const top = arr.slice(0,6);
+          // Converter score em pessoas estimadas
+          return top.map(item=>{
+            const people = item.score * (800 + Math.floor(Math.random()*4200));
+            return { term:item.term, people, networks:item.networks };
           });
         }
         function renderTrends(){
@@ -286,8 +297,18 @@
           data.forEach(item=>{
             const row = document.createElement('div');
             row.className = 'trend-item';
-            const verb = ['pessoas falando','pessoas buscando','pessoas reagindo'][Math.floor(Math.random()*3)];
-            row.innerHTML = `<span class="rank">#${item.rank}</span><span class="term">${item.term}</span><span class="volume">${verb}: ${followersFmt(item.people)}</span>`;
+            const logos = item.networks.map(id=>{
+              const n = NETWORKS.find(x=>x.id===id);
+              return n ? `<img src="${n.logo}" alt="${n.name}" title="${n.name}">` : '';
+            }).join('');
+            const verb = 'pessoas buscando';
+            row.innerHTML = `
+              <span class="term">${item.term}</span>
+              <span class="trend-right">
+                <span class="trend-logos" aria-label="Redes onde está em alta">${logos}</span>
+                <span class="volume">${verb}: ${followersFmt(item.people)}</span>
+              </span>
+            `;
             list.appendChild(row);
           });
         }

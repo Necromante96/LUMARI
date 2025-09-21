@@ -73,6 +73,7 @@
       function saveLocalDb(db){ try{ localStorage.setItem('lumari_users', JSON.stringify(db)); }catch(e){} }
       form.addEventListener('submit', function(ev){
         ev.preventDefault();
+        try{ if(window.lumariPlayClick) window.lumariPlayClick(); }catch(e){}
         const name = (document.getElementById('fullname').value||'').trim() || 'Usuário';
         const email = (document.getElementById('email').value||'').trim();
         const password = (document.getElementById('password').value||'').trim();
@@ -100,7 +101,13 @@
               const onAccept = ()=>{
                 document.removeEventListener('lumari:termsAccepted', onAccept);
                 document.removeEventListener('lumari:termsDeclined', onDecline);
-                window.location.href = target; // navegação completa
+                try{
+                  if(typeof window.pjaxLoad === 'function'){
+                    window.pjaxLoad(target, true);
+                  } else {
+                    window.location.href = target;
+                  }
+                }catch(_){ window.location.href = target; }
               };
               const onDecline = ()=>{
                 document.removeEventListener('lumari:termsAccepted', onAccept);
@@ -113,12 +120,18 @@
               // Sem modal de termos: tentar expor depois de um pequeno atraso, senão seguir
               setTimeout(()=>{
                 try{
-                  if(typeof createTermsModal === 'function'){
+                    if(typeof createTermsModal === 'function'){
                     createTermsModal(role);
                     const onAccept = ()=>{
                       document.removeEventListener('lumari:termsAccepted', onAccept);
                       document.removeEventListener('lumari:termsDeclined', onDecline);
-                      window.location.href = target;
+                        try{
+                          if(typeof window.pjaxLoad === 'function'){
+                            window.pjaxLoad(target, true);
+                          } else {
+                            window.location.href = target;
+                          }
+                        }catch(_){ window.location.href = target; }
                     };
                     const onDecline = ()=>{
                       document.removeEventListener('lumari:termsAccepted', onAccept);
@@ -127,7 +140,13 @@
                     document.addEventListener('lumari:termsAccepted', onAccept);
                     document.addEventListener('lumari:termsDeclined', onDecline);
                   } else {
-                    window.location.href = target;
+                    try{
+                      if(typeof window.pjaxLoad === 'function'){
+                        window.pjaxLoad(target, true);
+                      } else {
+                        window.location.href = target;
+                      }
+                    }catch(_){ window.location.href = target; }
                   }
                 }catch(e){ window.location.href = target; }
               }, 100);
