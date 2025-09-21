@@ -75,8 +75,10 @@
       // Ajusta o link de signup para preservar a role desejada
       signupLink.href = 'signup.html?role=' + role;
 
+      // som de clique explícito no submit
       form.addEventListener('submit', function(ev){
         ev.preventDefault();
+        try{ if(window.lumariPlayClick) window.lumariPlayClick(); }catch(e){}
         const email = (document.getElementById('email').value||'').trim();
         const password = (document.getElementById('password').value||'').trim();
         if(!email || !password){ return; }
@@ -92,9 +94,18 @@
         const sessionUser = { email: found.email, name: found.name, role: found.role };
         try{ localStorage.setItem('lumari_user', JSON.stringify(sessionUser)); }catch(e){}
         const target = role === 'creator' ? 'home-creator.html' : 'home-public.html';
-        // Usar navegação completa para garantir carregamento correto dos estilos
-        window.location.href = target;
+        // Preferir PJAX para manter áudio contínuo
+        try{
+          if(typeof window.pjaxLoad === 'function'){
+            window.pjaxLoad(target, true);
+          } else {
+            window.location.href = target;
+          }
+        }catch(_){ window.location.href = target; }
       });
+
+      // clique sonoro no link de cadastro
+      if(signupLink){ signupLink.addEventListener('click', function(){ try{ if(window.lumariPlayClick) window.lumariPlayClick(); }catch(e){} }); }
     })();
   </script>
 </body>

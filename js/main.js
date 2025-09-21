@@ -128,6 +128,22 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const text = await res.text();
       const doc = new DOMParser().parseFromString(text,'text/html');
+      // Coletar e injetar <style> inline do novo documento no <head> atual (evita perder CSS específico ao usar PJAX)
+      try{
+        const newStyles = Array.from(doc.head.querySelectorAll('style'));
+        const curHead = document.head;
+        const existingHashes = new Set(Array.from(curHead.querySelectorAll('style[data-pjax-style]')).map(s=>s.getAttribute('data-hash')));
+        newStyles.forEach(st=>{
+          const content = st.textContent || '';
+          const hash = String(content.length) + '-' + (content.split('').reduce((a,c)=> (a + c.charCodeAt(0)) % 100000, 0));
+          if(existingHashes.has(hash)) return;
+          const clone = document.createElement('style');
+          clone.textContent = content;
+          clone.setAttribute('data-pjax-style', '1');
+          clone.setAttribute('data-hash', hash);
+          curHead.appendChild(clone);
+        });
+      }catch(e){}
       const newMain = doc.querySelector('main.container');
       if(!newMain){ window.location.href=url; return; }
       
@@ -159,8 +175,9 @@ document.addEventListener('DOMContentLoaded', () => {
         updateToggleUI();
       }catch(e){}
       
-      // Re-adicionar event listeners
-      addClickSounds();
+  // Re-adicionar event listeners e acordeões
+  addClickSounds();
+  enhanceAccordions();
       
     }catch(e){ 
       window.location.href=url; 
@@ -199,17 +216,54 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Acordeões simples
+  // Acordeões com transição suave para .accordion-content
   function enhanceAccordions(){
     document.querySelectorAll('details').forEach(detail=>{
       if(detail.dataset.accordion) return;
       detail.dataset.accordion = '1';
-      const summary = detail.querySelector('summary');
-      if(summary){
-        summary.addEventListener('click', ()=>{
-          // Som já é adicionado pelo addClickSounds
-        });
+      const content = detail.querySelector('.accordion-content');
+      if(!content) return;
+
+      // Estado inicial respeitando atributo 'open'
+      if(detail.hasAttribute('open')){
+        content.classList.add('open');
+        content.style.height = 'auto';
+      } else {
+        content.classList.remove('open');
+        content.style.height = '0px';
       }
+
+      function openContent(){
+        content.classList.add('open');
+        // Se estava em 0, anima até scrollHeight e depois fixa em auto
+        const start = content.getBoundingClientRect().height;
+        content.style.height = start + 'px';
+        void content.offsetHeight; // reflow
+        const target = content.scrollHeight;
+        content.style.height = target + 'px';
+        const onEnd = ()=>{
+          content.style.height = 'auto';
+          content.removeEventListener('transitionend', onEnd);
+        };
+        content.addEventListener('transitionend', onEnd);
+      }
+
+      function closeContent(){
+        // Se estava em auto, define a altura atual antes de animar para 0
+        const start = content.getBoundingClientRect().height;
+        content.style.height = start + 'px';
+        void content.offsetHeight; // reflow
+        content.style.height = '0px';
+        const onEnd = ()=>{
+          content.classList.remove('open');
+          content.removeEventListener('transitionend', onEnd);
+        };
+        content.addEventListener('transitionend', onEnd);
+      }
+
+      detail.addEventListener('toggle', ()=>{
+        if(detail.open){ openContent(); } else { closeContent(); }
+      });
     });
   }
 
@@ -342,5 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
   try{
     window.createTermsModal = createTermsModal;
     window.ensureTermsAcceptedOrShow = ensureTermsAcceptedOrShow;
+    // Expor pjaxLoad e som de clique para uso em páginas (login/signup) sem recarregar a página inteira
+    window.pjaxLoad = pjaxLoad;
+    window.lumariPlayClick = playClickSound;
   }catch(e){}
 });
