@@ -106,4 +106,18 @@ v0.0.0-alfa
 
 ---
 
-Se preferir que eu simplifique ainda mais este README (por exemplo, transformá-lo em um README de uma página ainda mais enxuta ou adicionar exemplos de uso mais detalhados), diga o estilo desejado e eu ajusto.
+🏅 Menção Honrosa
+
+Este projeto acadêmico, desenvolvido no âmbito do curso de Marketing do Senac Viamão – RS, representa o esforço coletivo, a criatividade e a dedicação de um grupo comprometido em transformar ideias em soluções inovadoras.
+
+Um agradecimento especial aos alunos que deram vida a este trabalho:
+
+Júlia Silva
+
+Lucas Tavares
+
+Maluana Amaral
+
+Muriel Rosa
+
+Cada um contribuiu com talento, pesquisa e empenho para que este projeto fosse concluído com excelência, unindo teoria e prática em um resultado inspirador.
