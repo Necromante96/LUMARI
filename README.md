@@ -44,7 +44,6 @@ python3 -m http.server 8000
 - Licença: este repositório não inclui uma licença explícita; adicione uma se quiser permitir uso externo.
 
 ## Histórico rápido (changelog)
-
 v0.1.8-alfa (atual)
 - Limpeza e reorganização do README; resumo principal adicionado.
 - Removidos hooks de push automático e ajustado helper de changelog para não comitar automaticamente.
@@ -54,10 +53,56 @@ v0.1.7-alfa
 - Melhorias de documentação e fluxo de trabalho.
 
 v0.1.6-alfa
-- Correções nos acordeões e estabilidade do PJAX.
+- Correções nos acordeões (detalhes/summary) e maior estabilidade do carregamento PJAX.
 
 v0.1.5-alfa
-- Tendências com mini-logos por rede; login/signup usam `pjaxLoad` quando disponível.
+- Tendências em Tempo Real com mini-logos das redes sociais.
+- Login/Signup usam `pjaxLoad` quando disponível (mantém a música sem reiniciar).
+
+v0.1.4
+- Responsividade e melhorias de touch/UX para mobile.
+
+v0.1.3
+- Ajustes de grid e métricas na Home do Criador.
+
+v0.1.2
+- Modal de Termos de Uso por perfil (Público/Criador) e tela de recusa.
+
+v0.1.1
+- Sons de clique em elementos interativos.
+
+v0.1.0
+- Implementação inicial do PJAX leve para manter áudio entre páginas.
+
+v0.0.9
+- Ajustes de acessibilidade e foco.
+
+v0.0.8
+- Melhorias visuais, sombras e gradientes.
+
+v0.0.7
+- Páginas Home do Público e Criador (mock de métricas).
+
+v0.0.6
+- Protótipo de autenticação local (signup/login via localStorage).
+
+v0.0.5
+- Estrutura inicial das páginas internas (about, features, credits).
+
+v0.0.4
+- Primeira versão do áudio de fundo e botão de controle.
+
+v0.0.3
+- Landing page com cartões de acesso (público/criador).
+
+v0.0.2
+- Layout base e tipografia inicial.
+
+v0.0.1
+- Adição de assets de logo e som.
+
+v0.0.0-alfa
+- Estrutura inicial de páginas estáticas; primeiros assets adicionados.
 
 ---
 
